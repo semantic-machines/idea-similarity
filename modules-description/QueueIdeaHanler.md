@@ -14,30 +14,13 @@
 В идеях, из которых берутся текстовые поля, данные хранятся в виде следующих объектов:
 
 ```json
-{
+d:idea_1
+  rdf:type mnd-s:Idea ;
+  v-s:title "Название идеи" ;
+  v-s:actualState "Текст, описывающий текущую ситуацию на производстве" ;
+  v-s:description "Текст, описывающий предлагаемую инновацию" ;
     ...
-    "v-s:title": [
-    {
-      "data": "Название идеи",
-      "type": "String"
-    }
-  ],
-    ...
-  "v-s:actualState": [
-    {
-      "data": "Текст, описывающий текущую ситуацию на производстве",
-      "type": "String"
-    }
-  ],
-    ...
-  "v-s:description": [
-    {
-      "data": "Текст, описывающий предлагаемую инновацию",
-      "type": "String"
-    }
-  ]
-    ...
-}
+  .
 ```
 
 ### Выходные данные
@@ -45,43 +28,28 @@
 Модуль упаковывает полученные от ***LLM*** эмбеддинги для соответствующей идеи в объект (обновляет в случае изменения полей идеи, иначе создаёт новый) и добавляет их в систему ***Optiflow***:
 
 ```json
-{
-  "@": "*id объекта*",
-  "rdf:type": [
-    {
-      "data": "mnd-s:IdeaAsVector",
-      "type": "Uri"
-    }
-  ],
-  "mnd-s:IdeaNameEmbedding": [
-    {
-      "data": "0.123, -0.456, 0.789",
-      "type": "String"
-    }
-  ],
-"mnd-s:IdeaStateEmbedding": [
-    {
-      "data": "0.543, -0.678, 0.712",
-      "type": "String"
-    }
-  ],
-  "mnd-s:IdeaInnovationEmbedding": [
-    {
-      "data": "0.987, -0.654, 0.321",
-      "type": "String"
-    }
-  ],
-  "v-s:updateCounter": [
-    {
-      "data": 6,
-      "type": "Integer"
-    }
-  ],
-  "mnd-s:hasIdea": [
-    {
-      "data": "*id материнской идеи*",
-      "type": "Uri"
-    }
-  ]
-}
+  d:emb_123
+    rdf:type v-s:Embeddings ;
+    v-s:hasEmbedding d:emb_element_1 ;
+    v-s:hasEmbedding d:emb_element_2 ;
+    v-s:hasEmbedding d:emb_element_3 ;
+  .  
+
+  d:emb_element_1
+    rdf:type v-s:Embedding ;
+    v-s:associatesWith v-s:title ;
+    v-s:data "0.123, -0.456, 0.789" ;
+  .      
+  
+  d:emb_element_2
+    rdf:type v-s:Embedding ;
+    v-s:associatesWith v-s:actualState ;
+    v-s:data "0.134, 0.476, -0.795" ;
+  .
+  
+  d:emb_element_3
+    rdf:type v-s:Embedding ;
+    v-s:associatesWith v-s:description ;
+    v-s:data "0.987, -0.654, 0.321" ;
+  .
 ```
